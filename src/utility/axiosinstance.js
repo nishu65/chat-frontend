@@ -3,7 +3,7 @@ import axios from "axios";
 const VITE_URL_BK = import.meta.env.VITE_URL_BK;
 
 const axiosInstance = axios.create({
-    baseURL: VITE_URL_BK,
+    baseURL: VITE_URL_BK +"/api/v1",
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",
