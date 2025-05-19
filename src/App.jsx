@@ -5,7 +5,7 @@ import "./App.css";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/authen/login';
-import Signup from './pages/authen/signup';
+import Signup from './pages/authen/Signup';
 import Home from './pages/home/homepage';
 import ProtectedRoute from './protectedroute/protected.route';
 
