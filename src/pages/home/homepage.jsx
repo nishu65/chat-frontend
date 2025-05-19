@@ -17,7 +17,7 @@ const Homepage = () => {
 
         console.log(`🔌 Initializing WebSocket for user: ${userprofile._id}`);
 
-        const socketURL = import.meta.env.VITE_SOCKET_URL;
+        const socketURL = import.meta.env.VITE_URL_BK;
 
         const newSocket = io(socketURL, {
             query: {
