@@ -8,6 +8,13 @@ const SendMessage = ({ socket }) => {
     const { userprofile, selecteduser } = useSelector((state) => state.user);
     const [message, setMessage] = useState("");
 
+    const handleKeyDown = (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault(); // prevent adding a new line
+    handleSendMessage();
+  }
+};
+
     const handleSendMessage = () => {
         if (!message.trim()) return;
         if (!userprofile?._id || !selecteduser?._id) {
@@ -37,7 +44,9 @@ const SendMessage = ({ socket }) => {
 
     return (
         <div className="w-full p-3 flex gap-2">
-            <textarea
+            <textarea 
+                onKeyDown={handleKeyDown}
+                rows="1"
                 type="text"
                 placeholder="Type here..."
                 className="input input-bordered input-primary w-full"
