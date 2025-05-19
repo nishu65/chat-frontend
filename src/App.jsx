@@ -33,7 +33,7 @@ function App() {
         />
         {/* Add other routes as needed */}
       </Routes>
-      <Toaster position="top-right"  />
+      <Toaster position="top-center"  />
     </Router>
   );
 }
