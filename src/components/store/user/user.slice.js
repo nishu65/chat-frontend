@@ -1,126 +1,115 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginuserthunk } from "./user.thunk";
-import { registeruserthunk } from "./user.thunk";
-import { logoutuserthunk } from "./user.thunk";
-import { getotherusersthunk } from "./user.thunk";
-import { getuserthunk } from "./user.thunk";
+import {
+  loginuserthunk,
+  registeruserthunk,
+  logoutuserthunk,
+  getotherusersthunk,
+  getuserthunk,
+} from "./user.thunk";
+
+// Read token from localStorage on app start
+const token = localStorage.getItem("token");
 
 const initialState = {
-    isAuthenticated: false,
-    userprofile: null,
-    buttonloading: false,
-    screenloading: false,
-    otheruser: [],
-    selecteduser:JSON.parse(localStorage.getItem("selecteduser")),
-    error: null,
-}
-
-
+  isAuthenticated: !!token,
+  token: token || null,
+  userprofile: null,
+  buttonloading: false,
+  screenloading: false,
+  otheruser: [],
+  selecteduser: JSON.parse(localStorage.getItem("selecteduser")),
+  error: null,
+};
 
 export const userSlice = createSlice({
-    name: "user",
-    initialState,
-    reducers: {
-        setselecteduser: (state, action) => {
-            localStorage.setItem("selecteduser", JSON.stringify(action.payload));
-            state.selecteduser = action.payload;
-        },
+  name: "user",
+  initialState,
+  reducers: {
+    setselecteduser: (state, action) => {
+      localStorage.setItem("selecteduser", JSON.stringify(action.payload));
+      state.selecteduser = action.payload;
     },
-    extraReducers: (builder) => {
+  },
+  extraReducers: (builder) => {
+    // Login user
+    builder.addCase(loginuserthunk.pending, (state) => {
+      state.buttonloading = true;
+    });
+    builder.addCase(loginuserthunk.fulfilled, (state, action) => {
+      state.buttonloading = false;
+      state.userprofile = action.payload.user; // adjust according to your API
+      state.token = action.payload.token;
+      state.isAuthenticated = true;
+      localStorage.setItem("token", action.payload.token);
+    });
+    builder.addCase(loginuserthunk.rejected, (state, action) => {
+      state.buttonloading = false;
+      state.error = action.error.message;
+    });
 
-        //login user
-        builder.addCase(loginuserthunk.pending, (state,action) => {
-           
+    // Register user
+    builder.addCase(registeruserthunk.pending, (state) => {
+      state.buttonloading = true;
+    });
+    builder.addCase(registeruserthunk.fulfilled, (state, action) => {
+      state.buttonloading = false;
+      state.userprofile = action.payload.user;
+      state.token = action.payload.token;
+      state.isAuthenticated = true;
+      localStorage.setItem("token", action.payload.token);
+    });
+    builder.addCase(registeruserthunk.rejected, (state) => {
+      state.buttonloading = false;
+    });
 
-            state.buttonloading = true;
-        });
-        builder.addCase(loginuserthunk.fulfilled, (state, action) => {
-            state.buttonloading = false;
-            state.userprofile = action.payload;
-            state.isAuthenticated = true;
-            
-            
-            
-        });
-        builder.addCase(loginuserthunk.rejected, (state, action) => {   
-            state.buttonloading = false;
-            state.error = action.error.message;
-        });
+    // Logout user
+    builder.addCase(logoutuserthunk.pending, (state) => {
+      state.buttonloading = true;
+    });
+    builder.addCase(logoutuserthunk.fulfilled, (state) => {
+      state.buttonloading = false;
+      state.isAuthenticated = false;
+      state.userprofile = null;
+      state.otheruser = [];
+      state.selecteduser = null;
+      state.token = null;
+      localStorage.removeItem("token");
+      localStorage.removeItem("selecteduser");
+    });
+    builder.addCase(logoutuserthunk.rejected, (state) => {
+      state.buttonloading = false;
+    });
 
-        //register user
-        builder.addCase(registeruserthunk.pending, (state,action ) => {
-            state.buttonloading = true;
-        });
-        builder.addCase(registeruserthunk.fulfilled, (state, action) => {
-            state.userprofile = action.payload?.responsedata?.user;
-            state.isAuthenticated = true;
-            state.buttonloading = false;
-        }); 
-        builder.addCase(registeruserthunk.rejected, (state, action) => {
-            state.buttonloading = false;
-        });
+    // Get user profile (after page refresh or to update user info)
+    builder.addCase(getuserthunk.pending, (state) => {
+      state.screenloading = true;
+    });
+    builder.addCase(getuserthunk.fulfilled, (state, action) => {
+      state.screenloading = false;
+      state.isAuthenticated = true;
+      state.userprofile = action.payload.responseData;
+    });
+    builder.addCase(getuserthunk.rejected, (state, action) => {
+      state.screenloading = false;
+      state.error = action.error.message;
+    });
 
-        //logout user
-        builder.addCase(logoutuserthunk.pending, (state,action) => {
-            state.buttonloading = true;
-        });
-        builder.addCase(logoutuserthunk.fulfilled, (state, action) => {
-            state.buttonloading = false;
-            state.isAuthenticated = false;
-            state.userprofile = null;
-            state.otheruser = [];
-            state.selecteduser = null;
-            localStorage.clear();
-            
-        });
-        builder.addCase(logoutuserthunk.rejected, (state, action) => {
-            state.buttonloading = false;
-        });
-
-
-        //get user
-        builder.addCase(getuserthunk.pending, (state,action) => {
-            state.screenloading = true;
-        });
-        builder.addCase(getuserthunk.fulfilled, (state, action) => {
-            state.screenloading = false;
-            state.isAuthenticated = true;
-           
-            state.userprofile = action.payload?.responseData;
-            
-        
-        });
-        builder.addCase(getuserthunk.rejected, (state, action) => {
-            state.screenloading = false;
-            state.error = action.error.message;
-        });
-
-
-        //get other users
-        builder.addCase(getotherusersthunk.pending, (state,action) => {
-            state.screenloading = true;
-        });
-        builder.addCase(getotherusersthunk.fulfilled, (state, action) => {
-            state.screenloading = false;
-            state.otheruser = action.payload?.responseData;
-           
-        });
-        builder.addCase(getotherusersthunk.rejected, (state, action) => {
-            state.screenloading = false;
-        });
-        
-
-    }
+    // Get other users
+    builder.addCase(getotherusersthunk.pending, (state) => {
+      state.screenloading = true;
+    });
+    builder.addCase(getotherusersthunk.fulfilled, (state, action) => {
+      state.screenloading = false;
+      state.otheruser = action.payload.responseData;
+    });
+    builder.addCase(getotherusersthunk.rejected, (state) => {
+      state.screenloading = false;
+    });
+  },
 });
 
-
-
-
-
-
-export const {setselecteduser,setisAuthenticated,setUserProfile} = userSlice.actions;
+export const { setselecteduser } = userSlice.actions;
 
 export const selectUserProfile = (state) => state.user.userprofile;
 
-export default userSlice.reducer;   
-
+export default userSlice.reducer;
