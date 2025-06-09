@@ -28,6 +28,7 @@ const Login = () => {
 
     return (
         <div className=" items-center  ">
+            <h1>Hosted on free server it takes 20 or 30 seconds to start .reload  </h1>
             <div className="flex flex-col items-center bg-amber-400 max-w-md mx-auto my-70 p-4 rounded-lg shadow-lg">
                 <h1 className="mt-2 mb-2 text-fuchsia-500 text-3xl font-extrabold">Login</h1>
                 <form onSubmit={handleSubmit} className='flex flex-col items-center'>
