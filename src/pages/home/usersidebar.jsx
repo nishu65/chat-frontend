@@ -52,7 +52,7 @@ const Usersidebar = () => {
                 {/* Title with effects */}
                 <div className="relative z-10 transform hover:scale-105 transition-transform duration-300">
                     <h1 className="font-['Pacifico'] text-3xl animate-glow tracking-wider text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)] select-none outline-none cursor-default">
-                        ✨ Nishu Chat ✨
+                        ✨ Pineapple Chat ✨
                     </h1>
                     <div className="text-xs font-['Righteous'] tracking-widest mt-1 text-white/90 select-none">
                         CONNECT & CHAT
