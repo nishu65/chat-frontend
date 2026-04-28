@@ -52,7 +52,7 @@ const MessageContainer = ({ socket }) => {
     if (!selecteduser) {
         return (
             <div className="w-full flex items-center justify-center flex-col gap-5">
-                <h2>Welcome to Nishu Chat</h2>
+                <h2>Welcome to Pineapple Chat</h2>
                 <p className="text-xl">Please select a person to continue your chat!!</p>
             </div>
         );
